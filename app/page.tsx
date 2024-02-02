@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState, useRef } from "react";
+import React, { useState } from "react";
 import AddItem from "./AddItem";
 import ItemList from "./ItemList";
 import "bootstrap/dist/css/bootstrap.css";
@@ -10,22 +10,13 @@ export default function Home() {
     { id: 3, todo: "item3", checked: false },
   ]);
 
-  const itemRef = useRef<HTMLInputElement>(null);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (itemRef.current !== null && itemRef.current.value.trim() !== "") {
-      const newItem = {
-        id: itemList.length + 1,
-        todo: itemRef.current.value.trim(),
-        checked: false,
-      };
-
-      setItemList((prev) => [...prev, newItem]);
-      if (itemRef.current !== null) {
-        itemRef.current.value = "";
-      }
-    }
+  const handleSubmit = (data: { todo: string }) => {
+    const newItem = {
+      id: itemList.length + 1,
+      todo: data.todo,
+      checked: false,
+    };
+    setItemList((prev) => [...prev, newItem]);
   };
 
   const handleDelete = (id: number) => {
@@ -43,7 +34,7 @@ export default function Home() {
 
   return (
     <main className="mb-3 p-5">
-      <AddItem onClick={handleSubmit} itemRef={itemRef} />
+      <AddItem onSubmit={handleSubmit} />
       <ItemList
         itemList={itemList}
         handleToggleCheckbox={handleToggleCheckbox}
